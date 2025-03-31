@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui"
+    />
+    <title>Tower Building Game</title>
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.png" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      img {
+        width: 100%;
+      }
+      html {
+        background: rgba(252, 252, 253);
+        height: 100%;
+      }
+      body {
+        margin: 0 auto;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+      }
+
+      html {
+        font-size: 17.6vh;
+      }
+      #canvas {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      a {
+        text-decoration: none;
+      }
+      li,
+      ol,
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+      .hide {
+        display: none;
+      }
+      .clear {
+        clear: both;
+      }
+      .loading {
+        background-color: rgba(252, 252, 253);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      @keyframes spinner {
+        from {
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loader-element {
+        display: block;
+        width: 60px;
+        height: 60px;
+        aspect-ratio: 1/1;
+        border: 5px solid #f4576d;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spinner 1s linear infinite;
+        box-sizing: border-box;
+      }
+
+      .content {
+        height: 100vh;
+        margin: 0 auto;
+        position: relative;
+      }
+      .landing .title {
+        width: 60%;
+      }
+      .landing .logo {
+        width: 30%;
+        position: absolute;
+        right: 0.2rem;
+        top: 0.2rem;
+      }
+      .landing .action-2 {
+        position: absolute;
+        bottom: 0.2rem;
+        width: 100%;
+      }
+      .landing .start {
+        width: 65%;
+      }
+      .slideTop {
+        -webkit-animation: st 1s ease-in-out;
+        animation: st 1s ease-in-out;
+      }
+      @-webkit-keyframes st {
+        0% {
+          transform: translateZ(0);
+        }
+        100% {
+          transform: translate3d(0, -100%, 0);
+        }
+      }
+      @keyframes st {
+        0% {
+          transform: translateZ(0);
+        }
+        100% {
+          transform: translate3d(0, -100%, 0);
+        }
+      }
+      .slideBottom {
+        -webkit-animation: sb 1s ease-in-out;
+        animation: sb 1s ease-in-out;
+      }
+      @-webkit-keyframes sb {
+        0% {
+          transform: translateZ(0);
+        }
+        100% {
+          transform: translate3d(0, 200%, 0);
+        }
+      }
+      @keyframes sb {
+        0% {
+          transform: translateZ(0);
+        }
+        100% {
+          transform: translate3d(0, 200%, 0);
+        }
+      }
+      .swing {
+        -webkit-animation: sw 2s ease-in-out alternate infinite;
+        animation: sw 2s ease-in-out alternate infinite;
+      }
+      @-webkit-keyframes sw {
+        0% {
+          transform: rotate(5deg);
+          transform-origin: top center;
+        }
+        100% {
+          transform: rotate(-5deg);
+          transform-origin: top center;
+        }
+      }
+      @keyframes sw {
+        0% {
+          transform: rotate(5deg);
+          transform-origin: top center;
+        }
+        100% {
+          transform: rotate(-5deg);
+          transform-origin: top center;
+        }
+      }
+      .modal .mask {
+        background-color: #000;
+        opacity: 0.6;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+      }
+      .modal .modal-content {
+        position: fixed;
+        height: 100%;
+        width: 90%;
+        margin-top: 0.3rem;
+        top: 0;
+      }
+      .modal .main {
+        width: 85%;
+        margin: 0 auto;
+      }
+      .modal .container {
+        position: relative;
+      }
+      .modal .bg {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .modal .modal-main {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-top: -0.4rem;
+      }
+      .modal .over-img {
+        width: 80%;
+        margin: 0.8rem auto 0;
+      }
+      .modal .over-score {
+        margin-top: -0.2rem;
+        font-size: 0.5rem;
+        color: #ff735c;
+        text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff,
+          2px 2px 0 #fff;
+      }
+      .modal .tip {
+        font-size: 0.16rem;
+        color: #9b724e;
+      }
+      .modal .over-button-b {
+        width: 70%;
+        margin: 0.1rem auto 0;
+      }
+      /* .wxShare {
+        background: #000;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 11;
+        opacity: 0.9;
+      }
+      .wxShare img {
+        width: 50%;
+        float: right;
+        margin: 10px 10px 0 0;
+      } */
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" class="hide"></canvas>
+    <div class="content">
+      <div class="loading">
+        <div class="loader-element"></div>
+      </div>
+      <div class="landing hide">
+        <div class="action-2">
+          <img
+            style="cursor: pointer"
+            id="start"
+            src="./assets/main-index-start.png"
+            class="start"
+          />
+        </div>
+      </div>
+      <div id="modal" class="modal hide">
+        <div class="mask"></div>
+        <div class="js-modal-content modal-content">
+          <div class="main">
+            <div class="container">
+              <img src="./assets/main-modal-bg.png" class="bg" />
+              <div class="modal-main">
+                <div id="over-modal" class="hide js-modal-card">
+                  <!-- <img src="./assets/main-modal-over.png" class="over-img" /> -->
+                  <div id="score" class="over-score font-wenxue"></div>
+                  <div id="over-zero" class="hide">
+                    <div class="tip">
+                      <p>Try Again!</p>
+                      <img
+                        src="./assets/main-modal-again-b.png"
+                        class="over-button-b js-reload"
+                      />
+                      <!-- <img
+                        style="display: none"
+                        src="./assets/main-modal-invite-b.png"
+                        class="over-button-b js-invite"
+                      /> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="wxShare hide"><img src="./assets/main-share-icon.png" /></div> -->
+    </div>
+    <script src="./dist/main.js"></script>
+    <script>
+      var domReady,
+        loadFinish,
+        canvasReady,
+        loadError,
+        gameStart,
+        game,
+        score,
+        successCount;
+
+      // Initialize window height and width
+      var gameWidth = window.innerWidth;
+      var gameHeight = window.innerHeight;
+      var ratio = 1.5;
+
+      if (gameHeight / gameWidth < ratio) {
+        gameWidth = Math.ceil(gameHeight / ratio);
+      }
+
+      // Set the .content element's dimensions
+      var contentElement = document.querySelector(".content");
+      contentElement.style.height = gameHeight + "px";
+      contentElement.style.width = gameWidth + "px";
+
+      // Set the .js-modal-content element's width
+      var modalContentElement = document.querySelector(".js-modal-content");
+      modalContentElement.style.width = gameWidth + "px";
+
+      // Loading animation
+      function hideLoading() {
+        if (domReady && canvasReady) {
+          var canvasElement = document.getElementById("canvas");
+          canvasElement.style.display = "block";
+          loadFinish = true;
+
+          setTimeout(function () {
+            var loadingElement = document.querySelector(".loading");
+            loadingElement.style.display = "none";
+            var landingElement = document.querySelector(".landing");
+            landingElement.style.display = "block";
+          }, 1500);
+        }
+      }
+
+      function updateLoading(status) {
+        var success = status.success;
+        var total = status.total;
+        var failed = status.failed;
+
+        if (failed > 0 && !loadError) {
+          loadError = true;
+          alert("Network error... Please try again.");
+          return;
+        }
+
+        var percent = parseInt((success / total) * 100);
+        if (percent === 100 && !canvasReady) {
+          canvasReady = true;
+          hideLoading();
+        }
+
+        percent = percent > 98 ? 98 : percent;
+        percent = percent + "%";
+
+        // var loadingTitleElement = document.querySelector(".loading .title");
+        // loadingTitleElement.textContent = percent;
+
+        // var loadingPercentElement = document.querySelector(".loading .percent");
+        // loadingPercentElement.style.width = percent;
+      }
+
+      // модальное окно поражения
+      function overShowOver() {
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("over-modal").style.display = "block";
+        document.getElementById("over-zero").style.display = "block";
+      }
+
+      // Game customization options
+      const option = {
+        width: gameWidth,
+        height: gameHeight,
+        canvasId: "canvas",
+        soundOn: true,
+        setGameScore: function (s) {
+          score = s;
+        },
+        setGameSuccess: function (s) {
+          successCount = s;
+        },
+        setGameFailed: function (f) {
+          document.getElementById("score").textContent = score; // Update score display
+          if (f >= 1) overShowOver(); // Show game over if failure count reaches 3
+        },
+      };
+
+      // Game initialization with options
+      function gameReady() {
+        game = TowerGame(option);
+        game.load(function () {
+          game.init();
+          // setTimeout(function () {
+          //   game.playBgm(); // Play background music
+          // });
+        }, updateLoading);
+      }
+
+      // Detect if running in WeChat
+      var isWechat =
+        navigator.userAgent.toLowerCase().indexOf("micromessenger") !== -1;
+      if (isWechat) {
+        document.addEventListener("WeixinJSBridgeReady", gameReady, false);
+      } else {
+        gameReady();
+      }
+
+      // Function to hide the index/landing page
+      function indexHide() {
+        // document.querySelector(".landing .action-1").classList.add("slideTop");
+        document
+          .querySelector(".landing .action-2")
+          .classList.add("slideBottom");
+        setTimeout(function () {
+          document.querySelector(".landing").style.display = "none"; // Hide landing page
+        }, 950);
+      }
+
+      // Click event for the start button
+      document.getElementById("start").addEventListener("click", function () {
+        if (gameStart) return; // Prevent multiple starts
+        gameStart = true;
+        // setTimeout(function () {
+        //   game.playBgm(); // Play background music after a delay
+        // });
+        indexHide(); // Hide the landing page
+        setTimeout(game.start.bind(game), 400); // Start the game after a delay
+      });
+
+      // Reload button event
+      document
+        .querySelector(".js-reload")
+        .addEventListener("click", function () {
+          window.location.href += "?s=" + Date.now(); // Reload the page with a timestamp query parameter
+        });
+
+      // Invite button event
+      // document
+      //   .querySelector(".js-invite")
+      //   .addEventListener("click", function () {
+      //     document.querySelector(".wxShare").style.display = "block"; // Show the share prompt
+      //   });
+
+      // Click event to close the share prompt
+      // document.querySelector(".wxShare").addEventListener("click", function () {
+      //   document.querySelector(".wxShare").style.display = "none"; // Hide the share prompt
+      // });
+
+      window.addEventListener(
+        "load",
+        function () {
+          domReady = true; // Set the domReady variable to true
+          hideLoading(); // Call the hideLoading function
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
