@@ -24,7 +24,7 @@ describe("Simple Tests", () => {
     const time = 1000; // Время в миллисекундах
     const velocity = getSwingBlockVelocity(engine, time);
 
-    // Проверяем, что результат является числом
+    // Проверяем, является ли результат числом
     expect(typeof velocity).toBe("number");
   });
 });
