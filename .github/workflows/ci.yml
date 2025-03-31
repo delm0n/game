@@ -35,10 +35,3 @@ jobs:
       # Шаг 5: Собрать проект
       - name: Build project
         run: npm run build
-
-      # Шаг 6: Развернуть на GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # Используется токен по умолчанию
-          publish_dir: dist # Папка, содержащая собранный проект

@@ -36,9 +36,9 @@ export const getAngleBase = (engine) => {
 };
 
 export const getSwingBlockVelocity = (engine, time) => {
-  const successCount = engine.getVariable(constant.successCount);
-  const gameScore = engine.getVariable(constant.gameScore);
-  const { hookSpeed } = engine.getVariable(constant.gameUserOption);
+  const successCount = 0;
+  const gameScore = 0;
+  const { hookSpeed } = 0;
   if (hookSpeed) {
     return hookSpeed(successCount, gameScore);
   }
