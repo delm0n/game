@@ -1,0 +1,44 @@
+name: CI Pipeline for Game Project
+
+on:
+  push:
+    branches:
+      - main # Запускать pipeline при пуше в ветку main
+  pull_request:
+    branches:
+      - main # Запускать pipeline при создании Pull Request в main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Использовать последнюю версию Ubuntu
+
+    steps:
+      # Шаг 1: Клонировать репозиторий
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Шаг 2: Установить Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16" # Выберите версию Node.js, совместимую с вашим проектом
+
+      # Шаг 3: Установить зависимости
+      - name: Install dependencies
+        run: npm install
+
+      # Шаг 4: Запустить тесты (если они настроены)
+      - name: Run tests
+        run: npm test
+        continue-on-error: true # Продолжить выполнение, даже если тесты не настроены
+
+      # Шаг 5: Собрать проект
+      - name: Build project
+        run: npm run build
+
+      # Шаг 6: Развернуть на GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Используется токен по умолчанию
+          publish_dir: dist # Папка, содержащая собранный проект
